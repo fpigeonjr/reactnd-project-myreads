@@ -1,12 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import Book from "./Book";
 
-export class SearchBooks extends Component {
+class SearchBooks extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  static propTypes = {
+    books: PropTypes.array.isRequired
+  };
+
   render() {
+    const { books } = this.props;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -26,7 +34,9 @@ export class SearchBooks extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid" />
+          <ol className="books-grid">
+            {books.map(book => <Book key={book.id} book={book} />)}
+          </ol>
         </div>
       </div>
     );

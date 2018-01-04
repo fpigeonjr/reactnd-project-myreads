@@ -1,20 +1,47 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import escapeRegExp from "escape-string-regexp";
+import sortBy from "sort-by";
 import Book from "./Book";
+import * as BooksAPI from "./BooksAPI";
 
 class SearchBooks extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   static propTypes = {
     books: PropTypes.array.isRequired
   };
 
+  state = {
+    searchBooks: [],
+    query: ""
+  };
+
+  updateQuery = query => {
+    this.setState({
+      query: query.trim()
+    });
+  };
+
+  clearQuery = () => {
+    this.setState({ query: "" });
+  };
+
   render() {
     const { books } = this.props;
+    const { query } = this.state;
+    let showingBooks;
+
+    if (query) {
+      const match = new RegExp(escapeRegExp(query), "i");
+      showingBooks = this.props.books.filter(
+        book => match.test(book.title) || match.test(book.authors[0])
+      );
+    } else {
+      showingBooks = books;
+    }
+
+    showingBooks.sort(sortBy("title"));
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -30,12 +57,17 @@ class SearchBooks extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-            <input type="text" placeholder="Search by title or author" />
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={query}
+              onChange={event => this.updateQuery(event.target.value)}
+            />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {books.map(book => <Book key={book.id} book={book} />)}
+            {showingBooks.map(book => <Book key={book.id} book={book} />)}
           </ol>
         </div>
       </div>

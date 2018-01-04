@@ -16,9 +16,19 @@ class SearchBooks extends Component {
     query: ""
   };
 
+  componentDidMount() {
+    BooksAPI.search("android").then(searchBooks => {
+      this.setState({ searchBooks });
+    });
+  }
+
   updateQuery = query => {
     this.setState({
       query: query.trim()
+    });
+
+    BooksAPI.search(this.state.query).then(searchBooks => {
+      this.setState({ searchBooks });
     });
   };
 
@@ -27,20 +37,7 @@ class SearchBooks extends Component {
   };
 
   render() {
-    const { books } = this.props;
-    const { query } = this.state;
-    let showingBooks;
-
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), "i");
-      showingBooks = this.props.books.filter(
-        book => match.test(book.title) || match.test(book.authors[0])
-      );
-    } else {
-      showingBooks = books;
-    }
-
-    showingBooks.sort(sortBy("title"));
+    let { query } = this.state;
 
     return (
       <div className="search-books">
@@ -56,7 +53,7 @@ class SearchBooks extends Component {
 
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
-                */}
+              */}
             <input
               type="text"
               placeholder="Search by title or author"
@@ -67,7 +64,9 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {showingBooks.map(book => <Book key={book.id} book={book} />)}
+            {this.state.searchBooks.map(book => (
+              <Book key={book.id} book={book} />
+            ))}
           </ol>
         </div>
       </div>

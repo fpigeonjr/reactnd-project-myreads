@@ -46,27 +46,25 @@ class BooksApp extends Component {
                 <h1>MyReads</h1>
               </div>
               <div className="list-books-content">
-                <div>
-                  <BookShelf
-                    title="Currenty Reading"
-                    books={this.state.books}
-                    shelf="currentlyReading"
-                    updateBooks={this.updateBooks}
-                  />
-                  <BookShelf
-                    title="Want To Read"
-                    books={this.state.books}
-                    shelf="wantToRead"
-                    updateBooks={this.updateBooks}
-                  />
+                <BookShelf
+                  title="Currenty Reading"
+                  books={this.state.books}
+                  shelf="currentlyReading"
+                  updateBooks={this.updateBooks}
+                />
+                <BookShelf
+                  title="Want To Read"
+                  books={this.state.books}
+                  shelf="wantToRead"
+                  updateBooks={this.updateBooks}
+                />
 
-                  <BookShelf
-                    title="Read"
-                    books={this.state.books}
-                    shelf="read"
-                    updateBooks={this.updateBooks}
-                  />
-                </div>
+                <BookShelf
+                  title="Read"
+                  books={this.state.books}
+                  shelf="read"
+                  updateBooks={this.updateBooks}
+                />
               </div>
               <div className="open-search">
                 <Link to="/search">Add a book</Link>

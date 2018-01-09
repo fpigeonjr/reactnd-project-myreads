@@ -6,19 +6,14 @@ import * as BooksAPI from "./BooksAPI";
 
 class SearchBooks extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    updateBooks: PropTypes.func.isRequired
   };
 
   state = {
     searchBooks: [],
     query: ""
   };
-
-  componentDidMount() {
-    BooksAPI.search("").then(searchBooks => {
-      this.setState({ searchBooks });
-    });
-  }
 
   updateQuery = query => {
     this.clearQuery();
@@ -64,7 +59,13 @@ class SearchBooks extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {searchBooks &&
-              searchBooks.map(book => <Book key={book.id} book={book} />)}
+              searchBooks.map(book => (
+                <Book
+                  key={book.id}
+                  book={book}
+                  updateBooks={this.props.updateBooks}
+                />
+              ))}
           </ol>
         </div>
       </div>

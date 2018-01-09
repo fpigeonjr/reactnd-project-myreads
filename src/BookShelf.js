@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Book from "./Book";
 
-class SearchBooks extends Component {
+class BookShelf extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
     updateBooks: PropTypes.func.isRequired
@@ -31,4 +31,4 @@ class SearchBooks extends Component {
   }
 }
 
-export default SearchBooks;
+export default BookShelf;

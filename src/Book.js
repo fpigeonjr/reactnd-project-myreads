@@ -1,15 +1,23 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import * as BooksAPI from "./BooksAPI";
 
 class Book extends Component {
+  static propTypes = {
+    book: PropTypes.object.isRequired,
+    updateBooks: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
-    this.state = {};
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  static propTypes = {
-    book: PropTypes.object.isRequired
-  };
+  handleChange(event) {
+    BooksAPI.update(this.props.book, event.target.value).then(
+      this.props.updateBooks
+    );
+  }
 
   render() {
     return (
@@ -27,7 +35,10 @@ class Book extends Component {
               }}
             />
             <div className="book-shelf-changer">
-              <select>
+              <select
+                value={this.props.book.shelf}
+                onChange={this.handleChange}
+              >
                 <option value="none" disabled>
                   Move to...
                 </option>

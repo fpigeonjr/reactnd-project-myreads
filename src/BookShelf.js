@@ -3,25 +3,27 @@ import PropTypes from "prop-types";
 import Book from "./Book";
 
 class SearchBooks extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   static propTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    updateBooks: PropTypes.func.isRequired
   };
 
   render() {
-    const { books } = this.props;
+    const { books, title, shelf } = this.props;
     return (
       <div className="bookshelf">
-        <h2 className="bookshelf-title">{this.props.title}</h2>
+        <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {books
-              .filter(book => this.props.shelf === book.shelf)
-              .map(book => <Book key={book.id} book={book} />)}
+              .filter(book => shelf === book.shelf)
+              .map(book => (
+                <Book
+                  key={book.id}
+                  book={book}
+                  updateBooks={this.props.updateBooks}
+                />
+              ))}
           </ol>
         </div>
       </div>

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import escapeRegExp from "escape-string-regexp";
-import sortBy from "sort-by";
 import Book from "./Book";
 import * as BooksAPI from "./BooksAPI";
 
@@ -17,12 +15,13 @@ class SearchBooks extends Component {
   };
 
   componentDidMount() {
-    BooksAPI.search("android").then(searchBooks => {
+    BooksAPI.search("").then(searchBooks => {
       this.setState({ searchBooks });
     });
   }
 
   updateQuery = query => {
+    this.clearQuery();
     this.setState({
       query: query.trim()
     });
@@ -37,7 +36,7 @@ class SearchBooks extends Component {
   };
 
   render() {
-    let { query } = this.state;
+    let { query, searchBooks } = this.state;
 
     return (
       <div className="search-books">
@@ -64,9 +63,8 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.searchBooks.map(book => (
-              <Book key={book.id} book={book} />
-            ))}
+            {searchBooks &&
+              searchBooks.map(book => <Book key={book.id} book={book} />)}
           </ol>
         </div>
       </div>

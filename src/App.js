@@ -6,11 +6,20 @@ import BookShelf from "./BookShelf";
 import SearchBooks from "./SearchBooks";
 
 class BooksApp extends Component {
+  constructor() {
+    super();
+    this.updateBooks = this.updateBooks.bind(this);
+  }
+
   state = {
     books: []
   };
 
   componentDidMount() {
+    this.updateBooks();
+  }
+
+  updateBooks() {
     BooksAPI.getAll().then(books => {
       this.setState({ books });
     });
@@ -37,17 +46,20 @@ class BooksApp extends Component {
                     title="Currenty Reading"
                     books={this.state.books}
                     shelf="currentlyReading"
+                    updateBooks={this.updateBooks}
                   />
                   <BookShelf
                     title="Want To Read"
                     books={this.state.books}
                     shelf="wantToRead"
+                    updateBooks={this.updateBooks}
                   />
 
                   <BookShelf
                     title="Read"
                     books={this.state.books}
                     shelf="read"
+                    updateBooks={this.updateBooks}
                   />
                 </div>
               </div>

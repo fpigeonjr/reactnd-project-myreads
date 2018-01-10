@@ -15,14 +15,13 @@ class SearchBooks extends Component {
     query: ""
   };
 
+  componentDidMount() {
+    this.setState({ searchBooks: this.state.searchBooks });
+  }
+
   updateQuery = query => {
-    this.clearQuery();
     this.setState({
       query: query.trim()
-    });
-
-    BooksAPI.search(this.state.query).then(searchBooks => {
-      this.setState({ searchBooks });
     });
   };
 
@@ -32,6 +31,22 @@ class SearchBooks extends Component {
 
   render() {
     let { query, searchBooks } = this.state;
+
+    if (query) {
+      // search for books from api
+      BooksAPI.search(this.state.query).then(searchBooks => {
+        this.setState({ searchBooks });
+      });
+
+      // combine search results with books state data if they match by id
+      var booksWithShelfData = searchBooks.map(book => {
+        let haveEqualId = shelfData => shelfData.id === book.id;
+        let bookDataWithEqualId = this.props.books.find(haveEqualId);
+        return Object.assign({}, book, bookDataWithEqualId);
+      });
+    } else {
+      searchBooks = null;
+    }
 
     return (
       <div className="search-books">
@@ -59,7 +74,7 @@ class SearchBooks extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {searchBooks &&
-              searchBooks.map(book => (
+              booksWithShelfData.map(book => (
                 <Book
                   key={book.id}
                   book={book}

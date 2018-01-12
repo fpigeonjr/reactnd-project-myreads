@@ -12,16 +12,25 @@ class SearchBooks extends Component {
 
   state = {
     searchBooks: [],
+    booksFromShelf: [],
     query: ""
   };
 
-  componentDidMount() {
-    this.setState({ searchBooks: this.state.searchBooks });
-  }
+  addBookshelfData = searchBooks => {
+    searchBooks.map(book => {
+      let haveEqualId = shelfData => shelfData.id === book.id;
+      let bookDataWithEqualId = this.props.books.find(haveEqualId);
+      return Object.assign({}, book, bookDataWithEqualId);
+    });
+  };
 
-  updateQuery = query => {
-    this.setState({
-      query: query.trim()
+  handleChange = event => {
+    this.setState({ query: event.target.value }, () => {
+      BooksAPI.search(this.state.query)
+        .then(searchBooks => {
+          this.setState({ searchBooks });
+        })
+        .catch(this.setState({ searchBooks: [] }));
     });
   };
 
@@ -30,24 +39,7 @@ class SearchBooks extends Component {
   };
 
   render() {
-    let { query, searchBooks } = this.state;
-
-    if (query) {
-      // search for books from api
-      BooksAPI.search(this.state.query).then(searchBooks => {
-        this.setState({ searchBooks });
-      });
-
-      // combine search results with books state data if they match by id
-      var booksWithShelfData = searchBooks.map(book => {
-        let haveEqualId = shelfData => shelfData.id === book.id;
-        let bookDataWithEqualId = this.props.books.find(haveEqualId);
-        return Object.assign({}, book, bookDataWithEqualId);
-      });
-    } else {
-      searchBooks = null;
-    }
-
+    let { searchBooks } = this.state;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -63,18 +55,20 @@ class SearchBooks extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
               */}
+
             <input
               type="text"
               placeholder="Search by title or author"
-              value={query}
-              onChange={event => this.updateQuery(event.target.value)}
+              value={this.state.query}
+              onChange={this.handleChange}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
             {searchBooks &&
-              booksWithShelfData.map(book => (
+              searchBooks.length > 0 &&
+              searchBooks.map(book => (
                 <Book
                   key={book.id}
                   book={book}

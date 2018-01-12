@@ -12,16 +12,7 @@ class SearchBooks extends Component {
 
   state = {
     searchBooks: [],
-    booksFromShelf: [],
     query: ""
-  };
-
-  addBookshelfData = searchBooks => {
-    searchBooks.map(book => {
-      let haveEqualId = shelfData => shelfData.id === book.id;
-      let bookDataWithEqualId = this.props.books.find(haveEqualId);
-      return Object.assign({}, book, bookDataWithEqualId);
-    });
   };
 
   handleChange = event => {
@@ -34,14 +25,10 @@ class SearchBooks extends Component {
     });
   };
 
-  clearQuery = () => {
-    this.setState({ query: "" });
-  };
-
   render() {
     let { searchBooks } = this.state;
-    if (searchBooks.length) {
-      // combine search results with books state data if they match by id
+    // combine search results with books shelf data if they match by id
+    if (searchBooks && searchBooks.length > 0) {
       var booksWithShelfData = searchBooks.map(book => {
         let haveEqualId = shelfData => shelfData.id === book.id;
         let bookDataWithEqualId = this.props.books.find(haveEqualId);

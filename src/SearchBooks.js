@@ -40,6 +40,14 @@ class SearchBooks extends Component {
 
   render() {
     let { searchBooks } = this.state;
+    if (searchBooks.length) {
+      // combine search results with books state data if they match by id
+      var booksWithShelfData = searchBooks.map(book => {
+        let haveEqualId = shelfData => shelfData.id === book.id;
+        let bookDataWithEqualId = this.props.books.find(haveEqualId);
+        return Object.assign({}, book, bookDataWithEqualId);
+      });
+    }
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -68,7 +76,7 @@ class SearchBooks extends Component {
           <ol className="books-grid">
             {searchBooks &&
               searchBooks.length > 0 &&
-              searchBooks.map(book => (
+              booksWithShelfData.map(book => (
                 <Book
                   key={book.id}
                   book={book}

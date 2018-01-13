@@ -21,8 +21,10 @@ class Book extends Component {
 
   render() {
     let thumbnailLink = "";
-    this.props.book.imageLinks
-      ? (thumbnailLink = this.props.book.imageLinks.thumbnail)
+    let { book } = this.props;
+
+    book.imageLinks
+      ? (thumbnailLink = book.imageLinks.thumbnail)
       : (thumbnailLink = "http://via.placeholder.com/128x193?text=No%20Cover");
 
     return (
@@ -31,17 +33,10 @@ class Book extends Component {
           <div className="book-top">
             <div
               className="book-cover"
-              style={{
-                width: 128,
-                height: 193,
-                backgroundImage: `url("${thumbnailLink}")`
-              }}
+              style={{ backgroundImage: `url("${thumbnailLink}")` }}
             />
             <div className="book-shelf-changer">
-              <select
-                value={this.props.book.shelf || "none"}
-                onChange={this.handleChange}
-              >
+              <select value={book.shelf || "none"} onChange={this.handleChange}>
                 <option value="none" disabled>
                   Move to...
                 </option>
@@ -52,9 +47,9 @@ class Book extends Component {
               </select>
             </div>
           </div>
-          <div className="book-title">{this.props.book.title}</div>
+          <div className="book-title">{book.title}</div>
           <div className="book-authors">
-            {this.props.book.authors ? this.props.book.authors.join(", ") : ""}
+            {book.authors ? book.authors.join(", ") : ""}
           </div>
         </div>
       </li>
